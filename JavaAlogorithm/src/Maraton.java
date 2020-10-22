@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Hash_1 {
+public class Maraton {
     public String solution(String[] participant, String[] completion) {
         String string = "";
         // HashMap 선언
@@ -32,9 +32,7 @@ public class Hash_1 {
     public static void main(String[] args) {
         String[] participant = {"leo", "kiki", "eden"};
         String[] completion = {"eden", "kiki"};
-        Hash_1 hash_1 = new Hash_1();
+        Maraton hash_1 = new Maraton();
         System.out.println(hash_1.solution(participant, completion));
-
-
     }
 }

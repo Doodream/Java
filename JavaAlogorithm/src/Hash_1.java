@@ -2,23 +2,39 @@ import java.util.*;
 
 public class Hash_1 {
     public String solution(String[] participant, String[] completion) {
-        // participant 부분을 정렬하고
-        Arrays.sort(participant);
-        // completion 부분을 정렬한다.
-        Arrays.sort(completion);
-        // --> 문자열순으로 즉, 문자열 배열을 sort 함수로 정렬하면
-        // 알파벳, 모음순으로 정렬이된다.
-        // index를 빼주는 방법
-        int i;
-        // 완주자 수 만큼 비교한다.
-        for (i = 0; i < completion.length; i++) {
-            // 정렬된 과정에서 완주자는 참가자 의 한 부분이므로
-            // 정렬을 하면 참가자 한명씩 완주자 리스트를 비교해본다.
-            // 그럼 완주자리스트에 없는 참가자를 거를 수 있다.
-            if (!participant[i].equals(completion[i])) {
-                return participant[i];
+        String string = "";
+        // HashMap 선언
+        HashMap<String, Integer> hm = new HashMap<>();
+        // 참가자모두에게 value 값을 1을 준다. 만약 이름이 중복된 참가자가 있다면 기존 값에서 + 1을 추가한다.
+        for (String player : participant) {
+            if (hm.containsKey(player)) {
+                hm.put(player, hm.get(player) + 1);
+            }
+            else{
+                hm.put(player, 1);
             }
         }
-        return participant[i];
+        // 완주자들은 키값을 -1 한다.
+        for (String player : completion) {
+            hm.put(player, hm.get(player) - 1);
+        }
+
+        // 완주자들은 키값이 모두 0일 것이나 완주하지 못한 이들은 키값이 0 이상일 것이다.
+        for (String player : hm.keySet()) {
+            if (hm.get(player) > 0) {
+                string = player;
+            }
+        }
+
+        return string;
+    }
+
+    public static void main(String[] args) {
+        String[] participant = {"leo", "kiki", "eden"};
+        String[] completion = {"eden", "kiki"};
+        Hash_1 hash_1 = new Hash_1();
+        System.out.println(hash_1.solution(participant, completion));
+
+
     }
 }

@@ -4,57 +4,40 @@ public class FunctionDev {
     public int[] solution(int[] progresses, int[] speeds) {
         ArrayList<Integer> finishDay = new ArrayList<>();
         ArrayList<Integer> answerList = new ArrayList<>();
-        //각 progresses[i]를 speed[i]만큼 지나가게 한후 100이 달성 되면 몇일 걸리는 지
-        //finishDay[i]에 저장
-        for (int i = 0; i < progresses.length; i++) {
-            // 작업한지 몇일이 지났냐?
-            // 처음부터 1일이 지남
-            int day = 1;
-            // progresses[i]가 speeds[i]의 속도로 100이 넘을떄까지 증가시기고 넘으면 끝낸다.
-            while (true) {
-                progresses[i] += speeds[i];
-                if (progresses[i] < 100) {
-                    day++;
-                } else {
+
+        //남은 일 수 계산
+        for (int i = 0; i <progresses.length ; i++) {
+            int day = 0;
+            while(true){
+                if(progresses[i] >= 100) {
                     finishDay.add(day);
                     break;
                 }
+                progresses[i] += speeds[i];
+                day++;
             }
         }
-        // progresses의 남은 일수들
-        System.out.println(finishDay);
-
-        // 배포할 갯수 , 처음에는 아무리 적어도 배포할 갯수는 1개 이상이므로 count = 1
-        int count = 1;
-        // 첫 progresses의 남은 일수
+        // 배포 가능한 count 처음에는 배포가능한 갯수가 1이다.
+        int releaseCount = 1;
+        // 첫 개발의 남은 날
         int tmp = finishDay.get(0);
-        // 두번째 progresses의 남은 일수 부터 tmp와 비교한다.
+        // 개발의 남은 날이 더 큰 것이 나오면 배포하고 다음턴, 아니면 배포가능한 개발갯수 증가
         for (int i = 1; i < finishDay.size(); i++) {
-            // 남은 일수가 progresses[0]보다 클 경우 progresses[0]은 배포가된다.
-            // 그리고 tmp는 progreses[0]보다 남은 일수가 많은 progress의 남은 일수가 된다.
-            // 그리고 남은일수가 적은 것은 배포가 되므로 count = 0으로 초기화 된다.
-            if (tmp < finishDay.get(i)) {
-                answerList.add(count);
+            if(tmp < finishDay.get(i)){
+                answerList.add(releaseCount);
+                releaseCount = 0;
                 tmp = finishDay.get(i);
-                count = 0;
             }
-
-            // tmp가 크던 말던 배포가능한 count횟수는 늘어난다.
-            // tmp가 finishDay.get(i) 보다 작으면 대체된 tmp의 count는 1이 되어야 하므로 초기화의 의미
-            // tmp가 finishDay.get(i) 보다 크거나 같으면 배포할 count는 늘어난다.
-            count++;
+            releaseCount ++;
         }
-        // 반복문이 끝나고 배포해야할 갯수가 남았다면 배포한다.
-        // 매우 중요하다. 마지막프로그램이 남았다면 배포해야한다.
-        if (count > 0) answerList.add(count);
-
-        // answer 옮겨 닮기
-        System.out.println(answerList);
+        // 배포안된 개발이 존재한다면 배포
+        if(releaseCount > 0) answerList.add(releaseCount);
         int[] answer = new int[answerList.size()];
-        for (int i = 0; i < answer.length; i++) {
+        for (int i = 0; i < answerList.size(); i++) {
             answer[i] = answerList.get(i);
-            //System.out.println(answer[i]);
         }
+        System.out.println(finishDay);
+        System.out.println(answerList);
         return answer;
     }
 

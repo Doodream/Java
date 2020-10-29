@@ -1,32 +1,45 @@
-public class Permutation {
-    public static void main(String[] args) {
-        int[] arr = {1, 2, 3, 4};
-        perm(arr, 0, 4, 4);
+import java.util.HashSet;
+class Solution {
+    public int solution(String numbers) {
+        HashSet<Integer> set = new HashSet<>();
+        permutation("", numbers, set);
+        int count = 0;
+        // HashSet 사용하기
+        // HashSet을 배열처럼 사용하기 위해서는 iterator()가 꼭 필요하다.
+        // iterator().hasNext()는 다음 원소가 있는지 없는지 판별한다.
+        while(set.iterator().hasNext()){
+            // iterator().next()는 다음 원소를 불러온다.
+            int a = set.iterator().next();
+            set.remove(a);
+            if(a==2) count++;
+            if(a%2!=0 && isPrime(a)){
+                count++;
+            }
+        }
+        return count;
     }
 
-    public static void perm(int[] arr, int depth, int n, int k) {
-        if (depth == k) { // 한번 depth 가 k로 도달하면 사이클이 돌았음. 출력함.
-            print(arr, k);
-            return;
+    // 소수를 찾을 때는 0과 1을 상관없고 3부터 시작해서 짝수도 거른다음
+    // 해당 숫자의 제곱근까지만 나눠서 0이면 소수가 아닌 것으로 판별한다.
+    public boolean isPrime(int n){
+        if(n==0 || n==1) return false;
+        for(int i=3; i<=(int)Math.sqrt(n); i+=2){
+            if(n%i==0) return false;
         }
-        for (int i = depth; i < n; i++) {
-            swap(arr, i, depth);
-            perm(arr, depth + 1, n, k);
-            swap(arr, i, depth);
-        }
-    } // 자바에서는 포인터가 없기 때문에 아래와 같이, 인덱스 i와 j를 통해 바꿔줌.
-
-    public static void swap(int[] arr, int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
+        return true;
     }
 
-    public static void print(int[] arr, int k) {
-        for (int i = 0; i < k; i++) {
-            if (i == k - 1) System.out.println(arr[i]);
-            else System.out.print(arr[i] + ",");
-        }
+    // 순열
+    public void permutation(String prefix, String str, HashSet<Integer> set) {
+        int n = str.length();
+        //if (n == 0) System.out.println(prefix);
+        if(!prefix.equals("")) set.add(Integer.valueOf(prefix));
+        // 모든 글자들을 한글자 씩 빼서 prefix에 넣고 HashSet에 저장한다. 한 사이클 순열
+        // 그 글자만 뺀 나머지 String만 재귀함수를 돌려서 결국에는 모든 글자에 대해 순열을 완성한다.
+        for (int i = 0; i < n; i++)
+            permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i+1, n), set);
+
     }
+
+
 }
-

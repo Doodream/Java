@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-class Solution {
+class Permutation {
     public int solution(String numbers) {
         HashMap<Integer, Integer> hashMap = new HashMap<>();
         HashSet<Integer> set = new HashSet<>();

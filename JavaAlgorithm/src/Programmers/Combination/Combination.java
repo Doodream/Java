@@ -1,48 +1,66 @@
 package Programmers.Combination;
 
-public class Combination {
+import java.util.ArrayList;
+import java.util.Stack;
 
-    public static void main(String[] args) {
+class Combination<T> {
+    private T[] arr;     //기준 배열
+    private Stack<T> st; //조합을 저장할 스택
+    public ArrayList<ArrayList<T>> result = new ArrayList<>();
 
-        int[] arr = {1, 2, 3, 4, 5, 6, 7};
+    public Combination(T[] arr) {
+        this.arr = arr;             //배열을 받아 객체에 저장한다.
+        st = new Stack<T>(); //스택에 메모리를 할당한다.
+    }
 
-//combination(조합을 적용시킬 배열[arr], 목표 길이[destNum]) 조합의 n = arr.length, r = 목표길이
+    public void addStack() {
+        //스택에 있는 값들을 출력한다.
+        ArrayList<T> arrayList = new ArrayList<>();
+        for (int i = 0; i < st.size(); i++) {
+            //System.out.print(st.get(i) + " ");
+            arrayList.add(st.get(i));
+        }
+        result.add(arrayList);
+    }
 
-//밑에껄 바로 사용해도 되나 결과물이 저장될 temp부분을 따로 추가하거나 해야함
+    public ArrayList<ArrayList<T>> doCombination(int n, int r, int index) {
+        // n : 전체 개수
+        // r : 뽑을 개수
+        // index 배열이다보니 현재 배열의 어디를 가리키고 있는지 필요하므로.
+        if (r == 0) {
+            //0개를 뽑는다는건 더 이상 뽑을 것이 없다는 말과 같으므로  스택을 출력하고 함수를 종료한다.
+            addStack();
+            return result;
+        } else if (n == r) {
+            //nCr 이라는 건 나머지를 전부 뽑겠다는 말과 같으므로 전부 스택에 넣은 후 출력하면 된다.
+            for (int i = 0; i < n; i++) st.add(arr[index + i]);//index부터 n개를 차례대로 스택에 넣고
+            addStack(); //결과에 넣여준다.
+            for (int i = 0; i < n; i++) st.pop(); //이후 전부 pop을 시켜 다음 과정을 진행한다.
+        } else {
+            //저 두가지 예외 사항을 빼면 점화식대로 진행하면 된다.
 
-//        for (int i = 1; i < arr.length + 1; i++) {
-//            combination(arr, i);
+            //index를 포함하는 경우
+            st.add(arr[index]);
+            doCombination(n - 1, r - 1, index + 1); //index를 스택에 넣은상태로 index를 1옮겨 그대로 진행.
+
+            //index를 포함하지 않는 경우
+            st.pop(); //index를 제거해주고
+            doCombination(n - 1, r, index + 1); //index를 제외한 상태에서 n-1Cr 진행.
+        }
+        return result;
+    }
+
+//    public static void main(String[] args) {
+//        String[] arr = {"rho", "doo", "hyun"};
+//        Integer[] arrant = {1, 2, 3};
+//        Combination combination = new Combination(arr);
+//        ArrayList<ArrayList<String>> arrayLists = combination.doCombination(arr.length, 2, 0);
+//        for (int i = 0; i < arrayLists.size(); i++) {
+//            for (int j = 0; j < arrayLists.get(i).size(); j++) {
+//                System.out.print(arrayLists.get(i).get(j) + " ");
+//            }
+//            System.out.println();
 //        }
-        combination(arr, 2);
-    }
-
-
-    public static void combination(int[] arr, int destNum) {
-
-        int[] temp = new int[destNum];
-
-        combination(arr, 0, destNum, temp);
-
-    }
-
-
-    public static void combination(int[] arr, int curLoc, int destNum, int[] temp) {
-
-// 결과물 출력부분
-
-        if (0 == destNum) {
-
-            for (int i = 0; i < temp.length; i++) {
-                System.out.print(arr[temp[i]] + " ");
-            }
-            System.out.println();
-            return;
-        }
-        for (int i = curLoc; i < arr.length; i++) {
-            temp[temp.length - destNum] = i;
-            combination(arr, i + 1, destNum - 1, temp);
-        }
-
-    }
-
+//
+//    }
 }

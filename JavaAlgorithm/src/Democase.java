@@ -1,10 +1,8 @@
-package Solution;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-class Solution {
+class Democase {
     public int[] solution(int[][] v) {
         HashMap<Integer, Integer> hashMapX = new HashMap<>();
         HashMap<Integer, Integer> hashMapY = new HashMap<>();
@@ -23,7 +21,7 @@ class Solution {
     }
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
+        Democase solution = new Democase();
         int[][] v = {{1, 4}, {3, 4}, {3, 10}};
         int[] answer = solution.solution(v);
         for (int i = 0; i < answer.length; i++) {

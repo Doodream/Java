@@ -1,66 +1,52 @@
 package Programmers.Combination;
 
+
 import java.util.ArrayList;
-import java.util.Stack;
-
 class Combination<T> {
-    private T[] arr;     //기준 배열
-    private Stack<T> st; //조합을 저장할 스택
-    public ArrayList<ArrayList<T>> result = new ArrayList<>();
+    // 배열을 받아라
+    private T[] user_id;
+    private ArrayList<ArrayList<T>> resultArr;
+    private boolean[] checked;
 
-    public Combination(T[] arr) {
-        this.arr = arr;             //배열을 받아 객체에 저장한다.
-        st = new Stack<T>(); //스택에 메모리를 할당한다.
+    public ArrayList<ArrayList<T>> solution(String[] user_id) {
+        resultArr = new ArrayList<>();
+        checked = new boolean[user_id.length];
+
+        // 뽑을 갯수를 넣어라
+        dfs(2, new ArrayList<>());
+        return resultArr;
     }
 
-    public void addStack() {
-        //스택에 있는 값들을 출력한다.
-        ArrayList<T> arrayList = new ArrayList<>();
-        for (int i = 0; i < st.size(); i++) {
-            //System.out.print(st.get(i) + " ");
-            arrayList.add(st.get(i));
-        }
-        result.add(arrayList);
-    }
-
-    public ArrayList<ArrayList<T>> doCombination(int n, int r, int index) {
-        // n : 전체 개수
-        // r : 뽑을 개수
-        // index 배열이다보니 현재 배열의 어디를 가리키고 있는지 필요하므로.
-        if (r == 0) {
-            //0개를 뽑는다는건 더 이상 뽑을 것이 없다는 말과 같으므로  스택을 출력하고 함수를 종료한다.
-            addStack();
-            return result;
-        } else if (n == r) {
-            //nCr 이라는 건 나머지를 전부 뽑겠다는 말과 같으므로 전부 스택에 넣은 후 출력하면 된다.
-            for (int i = 0; i < n; i++) st.add(arr[index + i]);//index부터 n개를 차례대로 스택에 넣고
-            addStack(); //결과에 넣여준다.
-            for (int i = 0; i < n; i++) st.pop(); //이후 전부 pop을 시켜 다음 과정을 진행한다.
+    public void dfs(int selectAmount, ArrayList<T> arr) {
+        if (arr.size() == selectAmount) {
+            resultArr.add(arr);
+            return;
         } else {
-            //저 두가지 예외 사항을 빼면 점화식대로 진행하면 된다.
-
-            //index를 포함하는 경우
-            st.add(arr[index]);
-            doCombination(n - 1, r - 1, index + 1); //index를 스택에 넣은상태로 index를 1옮겨 그대로 진행.
-
-            //index를 포함하지 않는 경우
-            st.pop(); //index를 제거해주고
-            doCombination(n - 1, r, index + 1); //index를 제외한 상태에서 n-1Cr 진행.
+            for (int i = 0; i < user_id.length; i++) {
+                if(!checked[i]){
+                    // 리스트 사이즈가 뽑는 수보다 작아야지 dfs로 더 탐색한다.
+                    checked[i] = true;
+                    arr.add(user_id[i]);
+                    // 기존에 있던 arr를 넣어야한다.
+                    dfs(selectAmount, new ArrayList<>(arr));
+                    checked[i] = false;
+                    arr.remove(user_id[i]);
+                }
+            }
         }
-        return result;
+
     }
 
 //    public static void main(String[] args) {
-//        String[] arr = {"rho", "doo", "hyun"};
-//        Integer[] arrant = {1, 2, 3};
-//        Combination combination = new Combination(arr);
-//        ArrayList<ArrayList<String>> arrayLists = combination.doCombination(arr.length, 2, 0);
-//        for (int i = 0; i < arrayLists.size(); i++) {
-//            for (int j = 0; j < arrayLists.get(i).size(); j++) {
-//                System.out.print(arrayLists.get(i).get(j) + " ");
+//        Solution solution = new Solution();
+//        ArrayList<ArrayList<String>> answer = solution.solution(solution.user_id);
+//        for (int i = 0; i < answer.size(); i++) {
+//            for (int j = 0; j < answer.get(i).size(); j++) {
+//                System.out.print(answer.get(i).get(j) + " ");
 //            }
-//            System.out.println();
+//            System.out.println("");
 //        }
-//
+//        System.out.println(answer.size());
 //    }
+
 }

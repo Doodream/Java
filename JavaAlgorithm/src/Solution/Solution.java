@@ -1,49 +1,51 @@
 package Solution;
 
-import java.util.HashSet;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
 
-class Solution {
-    private HashSet<HashSet<Integer>> resultSet;
-    private String[] bannedId;
-    private String[] userId;
+
+class Combination<T> {
+    private T[] user_id;
+    private ArrayList<ArrayList<T>> resultArr;
     private boolean[] checked;
 
-    public int solution(String[] user_id, String[]banned_id) {
-        bannedId = banned_id;
-        userId = user_id;
-        resultSet = new HashSet<>();
+    public ArrayList<ArrayList<T>> solution(String[] user_id) {
+        resultArr = new ArrayList<>();
         checked = new boolean[user_id.length];
 
-        for (int i = 0; i < bannedId.length; i++) {
-            bannedId[i] = banned_id[i].replace("*", ".");
-        }
-        dfs(0, new HashSet<>());
-
-        return resultSet.size();
+        dfs(2, new ArrayList<>());
+        return resultArr;
     }
 
-    public void dfs (int index, HashSet<Integer> set){
-        if(index == bannedId.length){
-            resultSet.add(set);
+    public void dfs(int selectAmount, ArrayList<T> arr) {
+        if (arr.size() == selectAmount) {
+            resultArr.add(arr);
             return;
-        }
-
-        for (int i = 0; i < userId.length; i++) {
-            if(Pattern.matches(userId[i], bannedId[index]) && !checked[i])
-                checked[i] = true;
-                set.add(i);
-                dfs(index + 1, new HashSet<>());
-                checked[i] = false;
-                set.remove(i);
+        } else {
+            for (int i = 0; i < user_id.length; i++) {
+                if(!checked[i]){
+                    // 리스트 사이즈가 뽑는 수보다 작아야지 dfs로 더 탐색한다.
+                    checked[i] = true;
+                    arr.add(user_id[i]);
+                    // 기존에 있던 arr를 넣어야한다.
+                    dfs(selectAmount, new ArrayList<>(arr));
+                    checked[i] = false;
+                    arr.remove(user_id[i]);
+                }
+            }
         }
 
     }
 
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        String[] user_id = {"frodo", "fradi", "crodo", "abc123", "frodoc"};
-        String[] banned_id = {"fr*d*", "*rodo", "******", "******"};
-        System.out.println(solution.solution(user_id, banned_id));
-    }
+//    public static void main(String[] args) {
+//        Solution solution = new Solution();
+//        ArrayList<ArrayList<String>> answer = solution.solution(solution.user_id);
+//        for (int i = 0; i < answer.size(); i++) {
+//            for (int j = 0; j < answer.get(i).size(); j++) {
+//                System.out.print(answer.get(i).get(j) + " ");
+//            }
+//            System.out.println("");
+//        }
+//        System.out.println(answer.size());
+//    }
+
 }

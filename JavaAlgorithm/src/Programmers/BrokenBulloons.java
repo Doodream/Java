@@ -8,20 +8,21 @@ class BrokenBulloons {
 
         for (int i = 0; i < a.length; i++) {
             int bulloon = a[i];
-            ArrayList<Integer> leftList = new ArrayList<>();
+            int[] leftArr = new int[i];
             for (int j = 0; j < i; j++) {
-                leftList.add(a[j]);
+                leftArr[j] = a[j];
             }
-            ArrayList<Integer> rightList = new ArrayList<>();
+            int[] rightArr = new int[a.length - i - 1];
             for (int j = i + 1; j < a.length; j++) {
-                rightList.add(a[j]);
+                rightArr[j - i - 1] = a[j];
             }
+
 
             ArrayList<Integer> minlist = new ArrayList<>();
 
-            if (leftList.size() == 0 || rightList.size() == 0) continue;
-            minlist.add(minBulloon(leftList));
-            minlist.add(minBulloon(rightList));
+            if (leftArr.length == 0 || rightArr.length == 0) continue;
+            minlist.add(minBulloon(leftArr));
+            minlist.add(minBulloon(rightArr));
             minlist.add(bulloon);
 
             ArrayList<Integer> answerList = new ArrayList<>();
@@ -35,10 +36,10 @@ class BrokenBulloons {
     }
 
     //ArrayList의 최소값의 인덱스를 반환하는 함수
-    public int minBulloon(ArrayList<Integer> list) {
-        int num = list.get(0);
-        for (int i = 0; i < list.size(); i++) {
-            if (num > list.get(i)) num = list.get(i);
+    public int minBulloon(int[] arr) {
+        int num = arr[0];
+        for (int i = 0; i < arr.length; i++) {
+            if (num > arr[i]) num = arr[i];
         }
         return num;
     }

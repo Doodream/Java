@@ -1,33 +1,49 @@
 package Solution;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.regex.Pattern;
 
 class Solution {
-    public int[] solution(int[][] v) {
-        HashMap<Integer, Integer> hashMapX = new HashMap<>();
-        HashMap<Integer, Integer> hashMapY = new HashMap<>();
-        int[] answer = new int[2];
+    private HashSet<HashSet<Integer>> resultSet;
+    private String[] bannedId;
+    private String[] userId;
+    private boolean[] checked;
 
-        for (int i = 0; i < v.length; i++) {
-            hashMapX.put(v[i][0], hashMapX.getOrDefault(v[i][0], 0) + 1);
-            hashMapY.put(v[i][1], hashMapY.getOrDefault(v[i][1], 0) + 1);
+    public int solution(String[] user_id, String[]banned_id) {
+        bannedId = banned_id;
+        userId = user_id;
+        resultSet = new HashSet<>();
+        checked = new boolean[user_id.length];
+
+        for (int i = 0; i < bannedId.length; i++) {
+            bannedId[i] = banned_id[i].replace("*", ".");
         }
-        for (int i = 0; i < v.length; i++) {
-            if(hashMapX.get(v[i][0]) == 1) answer[0] = v[i][0];
-            if(hashMapY.get(v[i][1]) == 1) answer[1] = v[i][1];
+        dfs(0, new HashSet<>());
+
+        return resultSet.size();
+    }
+
+    public void dfs (int index, HashSet<Integer> set){
+        if(index == bannedId.length){
+            resultSet.add(set);
+            return;
         }
 
-        return answer;
+        for (int i = 0; i < userId.length; i++) {
+            if(Pattern.matches(userId[i], bannedId[index]) && !checked[i])
+                checked[i] = true;
+                set.add(i);
+                dfs(index + 1, new HashSet<>());
+                checked[i] = false;
+                set.remove(i);
+        }
+
     }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[][] v = {{1, 4}, {3, 4}, {3, 10}};
-        int[] answer = solution.solution(v);
-        for (int i = 0; i < answer.length; i++) {
-            System.out.print(answer[i] + "");
-        }
+        String[] user_id = {"frodo", "fradi", "crodo", "abc123", "frodoc"};
+        String[] banned_id = {"fr*d*", "*rodo", "******", "******"};
+        System.out.println(solution.solution(user_id, banned_id));
     }
 }
